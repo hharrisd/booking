@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 
 
 class Category(models.Model):
@@ -27,8 +28,20 @@ class Customer(models.Model):
         return self.name
 
 
+class TimeSlot(models.Model):
+    slot = models.CharField(max_length=1)
+    start_date = models.TimeField()
+    end_date = models.TimeField()
+
+    def __str__(self):
+        return f'Slot {self.slot}: {self.start_date} to {self.end_date}'
+
+
 class Booking(models.Model):
+    day = models.DateField()
+    time_slot = models.ForeignKey(TimeSlot, on_delete=models.CASCADE)
     asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
+
+    def __str__(self):
+        return f'{self.asset.description} booked to {self.customer}, from {self.time_slot.start_date} to {self.time_slot.end_date}'

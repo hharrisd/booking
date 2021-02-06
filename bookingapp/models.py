@@ -30,11 +30,11 @@ class Customer(models.Model):
 
 class TimeSlot(models.Model):
     slot = models.CharField(max_length=1)
-    start_date = models.TimeField()
-    end_date = models.TimeField()
+    check_in = models.TimeField()
+    check_out = models.TimeField()
 
     def __str__(self):
-        return f'Slot {self.slot}: {self.start_date} to {self.end_date}'
+        return f'Slot {self.slot}: {self.checkin} to {self.checkout}'
 
 
 class Booking(models.Model):
@@ -44,4 +44,4 @@ class Booking(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.asset.description} booked to {self.customer}, from {self.time_slot.start_date} to {self.time_slot.end_date}'
+        return f'{self.asset.description} booked to {self.customer}, from {self.time_slot.check_in} to {self.time_slot.check_out}'

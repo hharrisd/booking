@@ -1,4 +1,6 @@
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 import datetime
 
 
@@ -33,8 +35,13 @@ class TimeSlot(models.Model):
     check_in = models.TimeField()
     check_out = models.TimeField()
 
+    def clean(self):
+        """ Validate that time slot has at least 1 hour of duration """
+        if self.check_out.hour - self.check_in.hour < 1:
+            raise ValidationError(_('A time slot must have at least 1 hour of duration'))
+
     def __str__(self):
-        return f'Slot {self.slot}: {self.checkin} to {self.checkout}'
+        return f'Slot {self.slot}: {self.check_in.strftime("%H:%M")} to {self.check_out.strftime("%H:%M")}'
 
 
 class Booking(models.Model):

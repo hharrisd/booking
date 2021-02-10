@@ -1,5 +1,13 @@
 {% extends 'bookingapp/base.html' %}
 
 {% block content %}
-    <h3>HOla por acá dfgfg</h3>
+    {% if booking_list %}
+    <ul>
+        {% for booking in booking_list %}
+            <li>{{ booking }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+        <p>There's not any booking yet</p>
+    {% endif %}
 {% endblock %}

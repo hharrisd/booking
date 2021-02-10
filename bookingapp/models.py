@@ -51,4 +51,6 @@ class Booking(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.asset.description} booked to {self.customer}, from {self.time_slot.check_in} to {self.time_slot.check_out}'
+        return f'{self.asset.description}, booked to {self.customer}, ' \
+               f'from {self.time_slot.check_in.strftime("%H:%M")} ' \
+               f'to {self.time_slot.check_out.strftime("%H:%M")}'

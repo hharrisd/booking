@@ -36,6 +36,11 @@ class TimeSlot(models.Model):
     check_in = models.TimeField()
     check_out = models.TimeField()
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(name='unique_timeslot', fields=['check_in', 'check_out'])
+        ]
+
     def clean(self):
         cleaned_data = super().clean()
         validation_error_list = []

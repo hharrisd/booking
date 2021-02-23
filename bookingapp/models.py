@@ -73,6 +73,11 @@ class Booking(models.Model):
     asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(name='unique_booking', fields=['day', 'time_slot', 'asset', 'customer'])
+        ]
+
     def clean(self):
         now = timezone.now()
 

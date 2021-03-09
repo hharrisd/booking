@@ -8,11 +8,16 @@ from .models import Booking
 
 
 def home(request):
-    return render(request, 'bookingapp/home.html', {})
+    return render(request, 'home.html', {})
+
+
+def index(request):
+    return render(request, 'bookingapp/booking_index.html', {})
+
 
 class BookingView(generic.ListView):
     model = Booking
-    template_name = 'bookingapp/home.html'
+    template_name = 'bookingapp/booking_index.html'
     context_object_name = 'booking_list'
 
 
@@ -21,7 +26,7 @@ def booking_new(request):
         form = BookingForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('bookingapp:home'))
+            return HttpResponseRedirect(reverse('bookingapp:index'))
     else:
         form = BookingForm()
     return render(request, 'bookingapp/booking_form.html', {'form': form})

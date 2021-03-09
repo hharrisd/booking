@@ -4,6 +4,7 @@ from .import views
 app_name = 'bookingapp'
 
 urlpatterns = [
-    path('', views.BookingView.as_view(), name='home'),
-    path('booking/new/', views.booking_new, name='booking_form')
+    path('', views.home, name='home'),
+    path('booking/', views.BookingView.as_view(), name='index'),
+    path('booking/new/', views.booking_new, name='new')
 ]

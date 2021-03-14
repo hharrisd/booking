@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -21,6 +22,7 @@ class BookingView(generic.ListView):
     context_object_name = 'booking_list'
 
 
+@login_required
 def booking_new(request):
     if request.method == 'POST':
         form = BookingForm(request.POST)

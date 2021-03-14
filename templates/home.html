@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h3>Welcome {{ user }}</h3>
-    {% if user.is_authenticated %}
-        <h3>Autenticado </h3>
-    {% else %}
-        <h3>No AUTENTICADO</h3>
-    {% endif %}
+    <main class="container">
+        <div class="starter-template text-center py-5 px-3">
+            <h1>My Booking App</h1>
+            <p class="lead">
+                Welcome to <b>My Booking App website</b>, a site to prctice some Django framework concepts.
+                <br>
+                Please log in and make a book
+            </p>
+        </div>
+    </main>
 {% endblock %}

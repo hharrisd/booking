@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <br>
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-md-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>See your booking list</h2>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            {% if booking_list %}
+                                {% for booking in booking_list %}
+                                    {% if booking.comming_booking %}
+                                        <li class="list-group-item">
+                                            <a href="{% url 'bookingapp:booking_detail' booking.id %}">
+                                                {{ booking }}
+                                            </a>
+                                        </li>
+                                    {% else %}
+                                        <li class="list-group-item disabled" aria-disabled="true">
+                                            {{ booking }}
+                                            <span class="badge rounded-pill bg-danger">Past booking</span>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <li class="list-group-item disabled" aria-disabled="true">There's not any booking yet
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <br>
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-md-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Booking Detail</h2>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <span><b>Asset:</b> {{ booking.asset }}</span>
+                            </li>
+                            <li class="list-group-item">
+                                <span><b>Day:</b> {{ booking.day }}</span>
+                            </li>
+                            <li class="list-group-item">
+                                <span><b>Time Slot:</b> {{ booking.time_slot }}</span>
+                            </li>
+                            <li class="list-group-item">
+                                <span><b>Booked to:</b> {{ booking.user }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <a class="btn btn-outline-primary" href="{% url 'bookingapp:booking_update' booking.id %}">
+                            Edit booking
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

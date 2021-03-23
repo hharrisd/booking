@@ -1,11 +1,12 @@
 from contextlib import contextmanager
 from datetime import datetime, timedelta
 
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from django.test import TestCase
 from django.utils import timezone
 
-from .models import TimeSlot, Booking, Customer, Category, Asset
+from .models import TimeSlot, Booking, Profile, Category, Asset
 from .forms import BookingForm
 
 
@@ -68,12 +69,15 @@ def create_customer():
     Creates a booking object
     :return: Customer object
     """
-    customer_name = 'Test Customer'
+    test_user = User.objects.create_user(username='john', email='john@doe.com', password='123')
+
+    customer_name = 'John Done'
     customer_address = 'Test Street 125'
     customer_birthday = datetime(1980, 12, 31)
     customer_email = 'test@test.com'
-    return Customer.objects.create(name=customer_name, address=customer_address, birthday=customer_birthday,
-                                   email=customer_email)
+    Profile.objects.create(name=customer_name, address=customer_address, birthday=customer_birthday,
+                                  email=customer_email, user=test_user)
+    return test_user
 
 
 def create_slot():
@@ -116,9 +120,23 @@ class BookingFormTests(TestCase):
                 'day': day,
                 'time_slot': test_time_slot,
                 'asset': test_asset,
-                'customer': test_customer
+                'user': test_customer
             })
 
         self.assertEqual(
             booking_form.errors["day"], ["A booking cannot be made in the past"]
         )
+
+    def test_unique_booking_constraint(self):
+        day = timezone.now() + timedelta(days=2)
+
+        test_customer = create_customer()
+        test_category = Category.objects.create(category='Testing')
+        test_asset = Asset.objects.create(category=test_category, description='Test Asset', comment='An asset to test')
+        test_time_slot = create_slot()
+        try:
+            booking_form1 = Booking.objects.create(day=day, time_slot=test_time_slot, asset=test_asset, customer=test_customer)
+
+            booking_form2 = Booking.objects.create(day=day, time_slot=test_time_slot, asset=test_asset, customer=test_customer)
+        except Exception as e:
+            print(e)

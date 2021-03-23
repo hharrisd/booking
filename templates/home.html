@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block stylesheet %}
+    <link rel='stylesheet' type='text/css' href='{% static 'css/main.min.css' %}'/>
+{% endblock %}
 
 {% block content %}
     <main class="container">
@@ -10,5 +15,47 @@
                 Please log in and make a book
             </p>
         </div>
+
+        <div id="calendar"></div>
     </main>
+
+    {% block jquery %}
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.5.1/main.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.5.1/locales-all.min.js"></script>
+            <script type="application/javascript">
+                $(document).ready(function () {
+                $('#calendar').fullCalendar({
+                    header: {
+                        left: 'prev,next',
+                        center: 'title',
+                        right: 'month,agendaWeek,agendaDay'
+                    },
+                    defaultDate: '2019-07-09',
+                    buttonIcons: true,
+                    weekNumbers: false,
+                    editable: true,
+                    eventLimit: true,
+                    events: [
+                        {
+                            title: 'All Day Event',
+                            description: 'Lorem ipsum 1...',
+                            start: '2019-07-01',
+                            color: '#3A87AD',
+                            textColor: '#ffffff',
+                        }
+                    ],
+                    dayClick: function (date, jsEvent, view) {
+                        alert('Has hecho click en: ' + date.format());
+                    },
+                    eventClick: function (calEvent, jsEvent, view) {
+                        $('#event-title').text(calEvent.title);
+                        $('#event-description').html(calEvent.description);
+                        $('#modal-event').modal();
+                    },
+                });
+            })
+                ;
+        </script>
+    {% endblock %}
+
 {% endblock %}

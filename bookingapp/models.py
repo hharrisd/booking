@@ -1,5 +1,9 @@
+from urllib import request
+
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 import datetime
@@ -21,11 +25,12 @@ class Asset(models.Model):
         return self.description
 
 
-class Customer(models.Model):
+class Profile(models.Model):
     name = models.CharField(max_length=50)
     address = models.CharField(max_length=100)
     birthday = models.DateField()
     email = models.EmailField()
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -71,11 +76,11 @@ class Booking(models.Model):
     day = models.DateField()
     time_slot = models.ForeignKey(TimeSlot, on_delete=models.CASCADE)
     asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(name='unique_booking', fields=['day', 'time_slot', 'asset', 'customer'])
+            models.UniqueConstraint(name='unique_booking', fields=['day', 'time_slot', 'asset'])
         ]
 
     def clean(self):
@@ -85,7 +90,14 @@ class Booking(models.Model):
             raise ValidationError({'day': _('A booking cannot be made in the past')})
 
     def __str__(self):
-        return f'{self.asset.description}, booked to {self.customer}, ' \
+        return f'{self.asset.description}, booked to {self.user.username}, ' \
                f'on {self.day.strftime("%x")}, ' \
                f'from {self.time_slot.check_in.strftime("%H:%M")} ' \
                f'to {self.time_slot.check_out.strftime("%H:%M")}'
+
+    def get_absolute_url(self):
+        return reverse('bookingapp:booking_detail', args=[self.id])
+
+    def comming_booking(self):
+        now = timezone.now().date()
+        return self.day > now
